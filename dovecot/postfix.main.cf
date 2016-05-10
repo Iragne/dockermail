@@ -23,6 +23,10 @@ smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
 smtpd_use_tls=yes
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtpd_tls_security_level=may
+smtpd_tls_auth_only=yes
+smtp_tls_security_level=may
+
 
 # See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
 # information on enabling SSL in the smtp client.
@@ -57,7 +61,8 @@ smtpd_relay_restrictions = permit_auth_destination, reject
 
 # Mail thats not for us gets filtered out by smtpd_relay_restrictions
 # When the mail is for us, we just accept everything. (could add spam blocklists/user checking etc. here)
-smtpd_recipient_restrictions = permit
+smtpd_recipient_restrictions = permit_mynetworks,permit_sasl_authenticated,reject_unauth_destination
+
 
 # Delivery to dovecot
 alias_maps = hash:/etc/aliases
